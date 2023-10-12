@@ -57,7 +57,7 @@ class resetPasswordController extends Controller
 
         $data = $request->validate(
             [
-                'email' => 'required|email'
+                'email' => 'required|email|exists:users,email'
             ]
         );
 

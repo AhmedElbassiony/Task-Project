@@ -31,7 +31,7 @@ class LoginRequest extends FormRequest
 
         return [
             'identifier' => 'required',
-            'password' => 'required',
+            'password' => 'required|min:6',
         ];
     }
 
@@ -86,14 +86,10 @@ class LoginRequest extends FormRequest
         $credentials = $this->only('identifier', 'password');
 
         if (filter_var($credentials['identifier'], FILTER_VALIDATE_EMAIL)) {
-            // $data = $credentials['identifier']->validate([
-            //     'identifier' => 'required|email|exists:users,email',
-            // ]);
+
             $credentials['email'] = $credentials['identifier'];
         } else {
-            // $data = $credentials['identifier']->validate([
-            //     'identifier' => 'required|degits:11|exists:users,mobile',
-            // ]);
+
             $credentials['mobile'] = $credentials['identifier'];
         }
         unset($credentials['identifier']);
