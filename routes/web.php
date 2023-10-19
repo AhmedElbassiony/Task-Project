@@ -13,23 +13,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => 'auth', 'role:admin', 'prefix' => 'dashboard'], function () {
-
+Route::group(['middleware' => 'auth', 'role:admin'], function () {
     Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard')->middleware('role:admin');
+    Route::group(['prefix' => 'dashboard'], function () {
+        Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'create'])->name('profile.create');
+        Route::post('profile', [\App\Http\Controllers\ProfileController::class, 'store'])->name('profile.store');
 
-    Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'create'])->name('profile.create');
-    Route::post('profile', [\App\Http\Controllers\ProfileController::class, 'store'])->name('profile.store');
+        Route::get('admins/data', [\App\Http\Controllers\AdminController::class, 'data'])->name('admins.data');
+        Route::resource('admins', \App\Http\Controllers\AdminController::class);
 
-    Route::get('admins/data', [\App\Http\Controllers\AdminController::class, 'data'])->name('admins.data');
-    Route::resource('admins', \App\Http\Controllers\AdminController::class);
+        Route::get('users/data', [\App\Http\Controllers\UsersController::class, 'data'])->name('users.data');
+        Route::get('users/{id}/products', [\App\Http\Controllers\UsersController::class, 'showUserProducts'])->name('users.show.products');
+        Route::resource('users', \App\Http\Controllers\UsersController::class);
 
-    Route::get('users/data', [\App\Http\Controllers\UsersController::class, 'data'])->name('users.data');
-    Route::get('users/{id}/products', [\App\Http\Controllers\UsersController::class, 'showUserProducts'])->name('users.show.products');
-    Route::resource('users', \App\Http\Controllers\UsersController::class);
-
-    Route::get('products/data', [\App\Http\Controllers\ProductController::class, 'data'])->name('products.data');
-    Route::resource('products', \App\Http\Controllers\ProductController::class);
-
+        Route::get('products/data', [\App\Http\Controllers\ProductController::class, 'data'])->name('products.data');
+        Route::resource('products', \App\Http\Controllers\ProductController::class);
+    });
 });
 
 Route::get('/generate',  [\App\Http\Controllers\DashboardController::class, 'generatePassword'])->name('generate-password');
